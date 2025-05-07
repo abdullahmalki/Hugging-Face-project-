@@ -1,24 +1,15 @@
 # Hugging-Face-project-
-from transformers import pipeline
-import gradio as gr
+# مشروع: مترجم إنجليزي-عربي باستخدام Hugging Face وGradio
 
-# تحميل النموذج الجاهز من Hugging Face
-classifier = pipeline("sentiment-analysis")
+## 💡 فكرة المشروع
+تطبيق بسيط لترجمة الجمل من اللغة الإنجليزية إلى اللغة العربية باستخدام نموذج مدرّب مسبقاً من Hugging Face، مع واجهة تفاعلية مبنية بـ Gradio.
 
-# دالة تستخدم النموذج لتحليل الشعور
-def analyze_sentiment(text):
-    result = classifier(text)[0]
-    label = result['label']
-    score = result['score']
-    return f"المشاعر: {label} (الدقة: {score:.2f})"
+## 🧠 النموذج المستخدم
+- الاسم: Helsinki-NLP/opus-mt-en-ar
+- المصدر: Hugging Face
+- المهمة: ترجمة آلية (Machine Translation)
 
-# واجهة Gradio
-interface = gr.Interface(
-    fn=analyze_sentiment,
-    inputs=gr.Textbox(lines=3, placeholder="أدخل جملة بالإنجليزية..."),
-    outputs="text",
-    title="تحليل المشاعر",
-    description="أدخل جملة وسيقوم النموذج بتحليل مشاعرك (إيجابي أو سلبي)"
-)
-
-interface.launch()
+## 🚀 تشغيل التطبيق
+1. تثبيت الحزم:
+```bash
+pip install transformers gradio
