@@ -13,12 +13,4 @@
 1. تثبيت الحزم:
 ```bash
 pip install transformers gradio
-
-
-interface = gr.Interface(
-    fn=translate,
-    inputs=gr.Textbox(label="أدخل النص باللغة الإنجليزية"),
-    outputs=gr.Textbox(label="النص المترجم إلى العربية"),
-    title="مترجم إنجليزي-عربي",
-    description="أدخل جملة باللغة الإنجليزية وسيقوم النموذج بترجمتها إلى اللغة العربية باستخدام نموذج من Hugging Face"
 )
