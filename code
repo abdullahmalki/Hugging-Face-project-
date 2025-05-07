@@ -1,25 +1,30 @@
 !pip install gradio
 
-from transformers import pipeline
+from transformers import MarianMTModel, MarianTokenizer
 import gradio as gr
 
-# تحميل النموذج الجاهز من Hugging Face
-classifier = pipeline("sentiment-analysis")
+# تحميل النموذج والمحول
+model_name = "Helsinki-NLP/opus-mt-en-ar"
+tokenizer = MarianTokenizer.from_pretrained(model_name)
+model = MarianMTModel.from_pretrained(model_name)
 
-# دالة تستخدم النموذج لتحليل الشعور
-def analyze_sentiment(text):
-    result = classifier(text)[0]
-    label = result['label']
-    score = result['score']
-    return f"المشاعر: {label} (الدقة: {score:.2f})"
+# دالة الترجمة
+def translate(text):
+    # ترميز النص
+    inputs = tokenizer(text, return_tensors="pt", padding=True, truncation=True)
+    # التنبؤ بالترجمة
+    translated = model.generate(**inputs)
+    # فك ترميز النتيجة
+    translated_text = tokenizer.decode(translated[0], skip_special_tokens=True)
+    return translated_text
 
 # واجهة Gradio
 interface = gr.Interface(
-    fn=analyze_sentiment,
-    inputs=gr.Textbox(lines=3, placeholder="أدخل جملة بالإنجليزية..."),
-    outputs="text",
-    title="تحليل المشاعر",
-    description="أدخل جملة وسيقوم النموذج بتحليل مشاعرك (إيجابي أو سلبي)"
+    fn=translate,
+    inputs=gr.Textbox(label="أدخل النص باللغة الإنجليزية"),
+    outputs=gr.Textbox(label="النص المترجم إلى العربية"),
+    title="مترجم إنجليزي-عربي",
+    description="أدخل جملة باللغة الإنجليزية وسيقوم النموذج بترجمتها إلى اللغة العربية باستخدام نموذج من Hugging Face"
 )
 
 interface.launch()
